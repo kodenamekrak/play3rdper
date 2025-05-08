@@ -6,7 +6,7 @@
 #include "beatsaber-hook/shared/config/config-utils.hpp"
 #include "beatsaber-hook/shared/utils/il2cpp-functions.hpp"
 
-#include "paper/shared/logger.hpp"
+#include "paper2_scotland2/shared/logger.hpp"
 
 constexpr auto Logger = Paper::ConstLoggerContext("Play3rdPerson");
 

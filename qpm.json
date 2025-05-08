@@ -27,7 +27,6 @@
         "pwsh ./scripts/start-logging.ps1"
       ],
       "qmod": [
-        "pwsh ./scripts/build.ps1",
         "qpm qmod zip"
       ],
       "restart": [
@@ -50,12 +49,12 @@
   "dependencies": [
     {
       "id": "bs-cordl",
-      "versionRange": "3500.*",
+      "versionRange": "4004.0.0",
       "additionalData": {}
     },
     {
       "id": "beatsaber-hook",
-      "versionRange": "^5.1.6",
+      "versionRange": "^6.0.0",
       "additionalData": {}
     },
     {
@@ -67,7 +66,7 @@
     },
     {
       "id": "custom-types",
-      "versionRange": "^0.17.7",
+      "versionRange": "^0.18.0",
       "additionalData": {}
     },
     {
@@ -77,12 +76,12 @@
     },
     {
       "id": "config-utils",
-      "versionRange": "^1.4.2",
+      "versionRange": "^2.0.0",
       "additionalData": {}
     },
     {
-      "id": "paper",
-      "versionRange": "^3.6.3",
+      "id": "paper2_scotland2",
+      "versionRange": "^4.6.0",
       "additionalData": {}
     }
   ]
