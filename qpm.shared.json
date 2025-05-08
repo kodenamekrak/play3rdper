@@ -84,6 +84,11 @@
         "id": "paper2_scotland2",
         "versionRange": "^4.6.0",
         "additionalData": {}
+      },
+      {
+        "id": "conditional-dependencies",
+        "versionRange": "^0.3.0",
+        "additionalData": {}
       }
     ]
   },
@@ -207,6 +212,18 @@
         }
       },
       "version": "4004.0.0"
+    },
+    {
+      "dependency": {
+        "id": "conditional-dependencies",
+        "versionRange": "=0.3.0",
+        "additionalData": {
+          "headersOnly": true,
+          "branchName": "version/v0_3_0",
+          "cmake": false
+        }
+      },
+      "version": "0.3.0"
     },
     {
       "dependency": {

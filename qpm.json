@@ -83,6 +83,11 @@
       "id": "paper2_scotland2",
       "versionRange": "^4.6.0",
       "additionalData": {}
+    },
+    {
+      "id": "conditional-dependencies",
+      "versionRange": "^0.3.0",
+      "additionalData": {}
     }
   ]
 }

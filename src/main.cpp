@@ -3,16 +3,10 @@
 #include "GlobalNamespace/LightManager.hpp"
 #include "GlobalNamespace/VRController.hpp"
 #include "GlobalNamespace/Saber.hpp"
-#include "GlobalNamespace/SaberManager.hpp"
 #include "GlobalNamespace/OVRInput.hpp"
-#include "GlobalNamespace/AudioTimeSyncController.hpp"
+#include "GlobalNamespace/StandardLevelScenesTransitionSetupDataSO.hpp"
 
-#include "beatsaber-hook/shared/utils/typedefs.h"
-#include "beatsaber-hook/shared/utils/il2cpp-utils.hpp"
-#include "beatsaber-hook/shared/utils/logging.hpp"
-#include "beatsaber-hook/shared/utils/utils.h"
 #include "beatsaber-hook/shared/utils/hooking.hpp"
-#include "beatsaber-hook/shared/utils/il2cpp-type-check.hpp"
 
 #include "UnityEngine/Transform.hpp"
 #include "UnityEngine/Resources.hpp"
@@ -26,6 +20,8 @@
 #include "Play3rdPerViewController.hpp"
 
 #include "bsml/shared/BSML.hpp"
+
+#include "conditional-dependencies/shared/main.hpp"
 
 #include <math.h>
 
@@ -71,6 +67,11 @@ int frame = 0;
 MAKE_HOOK_MATCH(LightManager_OnWillRenderObject, &LightManager::OnCameraPreRender, void, LightManager* self, UnityEngine::Camera* camera) {
   // Do stuff when this function is called 
   LightManager_OnWillRenderObject(self, camera); 
+  if(replay)
+  {
+    return;
+  }
+
   frame++;
   if(!getModConfig().Active.GetValue() || frame < 20) return;
   frame = 20;
@@ -196,9 +197,10 @@ method(c, matrix);
   c->get_transform()->set_eulerAngles(rot);
 }
 
-MAKE_HOOK_MATCH(AudioTimeSyncController_Start, &AudioTimeSyncController::Start, void, AudioTimeSyncController* self) {
-    AudioTimeSyncController_Start(self);
-    if(getModConfig().DisableWhileReplay.GetValue() && (strcmp(getenv("ViewingReplay"), "true") == 0)) replay = true;
+MAKE_HOOK_MATCH(StandardLevelScenesTransitionSetupDataSO_InitAndSetupScenes, &GlobalNamespace::StandardLevelScenesTransitionSetupDataSO::InitAndSetupScenes, void, StandardLevelScenesTransitionSetupDataSO* self, PlayerSpecificSettings* playerSpecificSettings, StringW backButtonText, bool startPaused) {
+    StandardLevelScenesTransitionSetupDataSO_InitAndSetupScenes(self, playerSpecificSettings, backButtonText, startPaused);
+    auto metalit = CondDeps::Find<bool>("replay", "IsInReplay");
+    replay = getModConfig().DisableWhileReplay.GetValue() && (self->get_gameMode() == "Replay" || (metalit.has_value() && metalit.value()()));
 }
 
 MAKE_HOOK_MATCH(SceneManager_ActiveSceneChanged, &UnityEngine::SceneManagement::SceneManager::Internal_ActiveSceneChanged, void, UnityEngine::SceneManagement::Scene previousActiveScene, UnityEngine::SceneManagement::Scene nextActiveScene) {
@@ -227,6 +229,7 @@ PLAY_3RD_PERSON_EXPORT void late_load() {
     // Install our hooks
     INSTALL_HOOK(Logger, LightManager_OnWillRenderObject);
     INSTALL_HOOK(Logger, SceneManager_ActiveSceneChanged);
+    INSTALL_HOOK(Logger, StandardLevelScenesTransitionSetupDataSO_InitAndSetupScenes);
 
     Logger.info("Installed all hooks!");
 }
